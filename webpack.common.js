@@ -8,7 +8,8 @@ module.exports = {
     popup: path.resolve("src/popup/popup.tsx"),
     options: path.resolve("src/options/options.tsx"),
     background: path.resolve("src/background/background.ts"),
-    contentScript: path.resolve("src/contentScript/contentScript.tsx"),
+    CSDisney: path.resolve("src/contentScript/Disney.js"),
+    CSNetflix: path.resolve("src/contentScript/Netflix.js"),
   },
   module: {
     rules: [
