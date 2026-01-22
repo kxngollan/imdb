@@ -1,5 +1,5 @@
 const badge = document.createElement("div");
-badge.textContent = "Disney+ CS ✅";
+badge.textContent = "Netflix";
 badge.style.cssText = `
   position: fixed;
   z-index: 999999;
@@ -15,19 +15,25 @@ document.documentElement.appendChild(badge);
 
 setTimeout(() => badge.remove(), 2000);
 
-const WHERE_TO_ADD_CLASS = "_1aa1a522";
+const WHERE_TO_ADD_CLASS = "videoMetadata--line";
 const BADGE_ID = "my-imdb-rating-extension-badge";
 
+let apiKey;
+
+chrome.storage.sync.get("apiKey", (r) => {
+  apiKey = r.apiKey;
+});
+
 async function findFilm(title) {
+  if (!apiKey) return null;
   try {
     const res = await fetch(
-      `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=31951a57`,
+      `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apiKey}`,
     );
     if (!res.ok) return null;
 
     const data = await res.json();
     if (data?.Response === "False") return null;
-    console.log(data);
     return data;
   } catch {
     return null;
@@ -35,13 +41,15 @@ async function findFilm(title) {
 }
 
 function getTitleFromPage() {
-  const titleEl = document.querySelector('[data-testid="details-tab-title"]');
+  const titleEl = document.querySelector(".about-header strong");
   const title = titleEl?.textContent?.trim();
   return title && title.length > 0 ? title : null;
 }
 
 function ensureBadgeContainer() {
   const host = document.querySelector(`.${WHERE_TO_ADD_CLASS}`);
+
+  host.style.cssText = "margin-bottom: 5px";
 
   if (!host) return null;
 
@@ -61,7 +69,7 @@ function ensureBadgeContainer() {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(55, 65, 81);
+  background-color: inherit;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   border-radius: 0.25rem;
@@ -80,19 +88,20 @@ function setBadgeText(text) {
 }
 
 (async () => {
-  console.log("Loading");
   let title = getTitleFromPage();
   const startObservers = async () => {
     const observer = new MutationObserver(async () => {
       const temp = getTitleFromPage();
-      console.log(title);
-      console.log(temp);
       if (temp !== title) {
         title = temp;
         const movie = await findFilm(temp);
         if (!movie?.imdbRating) {
-          setBadgeText("N/A");
+          setBadgeText("No IMDb");
         }
+        if (movie?.imdbRating === "N/A") {
+          setBadgeText("No IMDb");
+        }
+
         setBadgeText(`IMDb ${movie.imdbRating}`);
       }
     });
