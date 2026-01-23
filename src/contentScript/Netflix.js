@@ -94,21 +94,37 @@ function setBadgeText(text) {
 
 (async () => {
   let title = getTitleFromPage();
+  let film = await findFilm(title);
   const startObservers = async () => {
     const observer = new MutationObserver(async () => {
       const temp = getTitleFromPage();
+      if (temp !== null) {
+        if (temp !== title) {
+          title = temp;
+          const movie = await findFilm(temp);
+          if (!movie?.imdbRating) {
+            setBadgeText("No IMDb");
+          }
+          if (movie?.imdbRating === "N/A") {
+            setBadgeText("No IMDb");
+          }
 
-      if (temp !== title) {
-        title = temp;
-        const movie = await findFilm(temp);
-        if (!movie?.imdbRating) {
+          setBadgeText(
+            movie?.imdbRating ? `IMDb ${movie?.imdbRating}` : "No IMDb",
+          );
+          film = movie;
+        }
+      }
+      const badge = document.getElementById(BADGE_ID);
+      if (!badge) {
+        if (!film?.imdbRating) {
           setBadgeText("No IMDb");
         }
-        if (movie?.imdbRating === "N/A") {
+        if (film?.imdbRating === "N/A") {
           setBadgeText("No IMDb");
         }
 
-        setBadgeText(`IMDb ${movie.imdbRating}`);
+        setBadgeText(film?.imdbRating ? `IMDb ${film?.imdbRating}` : "No IMDb");
       }
     });
 

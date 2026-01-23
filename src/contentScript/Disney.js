@@ -35,7 +35,7 @@ async function findFilm(title) {
 
     const data = await res.json();
     if (data?.Response === "False") return null;
-    console.log(data);
+
     return data;
   } catch {
     return null;

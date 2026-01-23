@@ -22,7 +22,7 @@ const App: React.FC = () => {
       const res = await fetch(
         `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apikey}`,
       );
-      console.log(res);
+
       if (!res.ok) return false;
 
       const data = await res.json();
@@ -39,7 +39,6 @@ const App: React.FC = () => {
     setSaved(false);
     const film = await findFilm("The devil wears prada");
     if (film) {
-      console.log("saving");
       chrome.storage.sync.set({ apiKey: apikey }, () => {
         setSaved(true);
       });
