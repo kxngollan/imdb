@@ -16,6 +16,7 @@ document.documentElement.appendChild(badge);
 setTimeout(() => badge.remove(), 2000);
 
 const WHERE_TO_ADD_CLASS = "videoMetadata--line";
+
 const BADGE_ID = "my-imdb-rating-extension-badge";
 
 let apiKey;
@@ -26,6 +27,7 @@ chrome.storage.sync.get("apiKey", (r) => {
 
 async function findFilm(title) {
   if (!apiKey) return null;
+  if (!title) return null;
   try {
     const res = await fetch(
       `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apiKey}`,
@@ -42,16 +44,19 @@ async function findFilm(title) {
 
 function getTitleFromPage() {
   const titleEl = document.querySelector(".about-header strong");
-  const title = titleEl?.textContent?.trim();
-  return title && title.length > 0 ? title : null;
+  const img = document.querySelector(".previewModal--boxart");
+
+  const title = titleEl?.textContent?.trim() || img?.alt?.trim() || null;
+
+  return title || null;
 }
 
 function ensureBadgeContainer() {
-  const host = document.querySelector(`.${WHERE_TO_ADD_CLASS}`);
+  const BADGE_ID = "my-imdb-rating-extension-badge";
+  const WHERE_TO_ADD_CLASS = "videoMetadata--line";
 
-  host.style.cssText = "margin-bottom: 5px";
-
-  if (!host) return null;
+  let host = document.querySelector(`.${WHERE_TO_ADD_CLASS}`);
+  if (host) host.style.cssText = "margin-bottom: 5px";
 
   let badge = document.getElementById(BADGE_ID);
   if (!badge) {
@@ -92,6 +97,7 @@ function setBadgeText(text) {
   const startObservers = async () => {
     const observer = new MutationObserver(async () => {
       const temp = getTitleFromPage();
+
       if (temp !== title) {
         title = temp;
         const movie = await findFilm(temp);

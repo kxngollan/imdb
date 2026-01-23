@@ -26,6 +26,7 @@ chrome.storage.sync.get("apiKey", (r) => {
 
 async function findFilm(title) {
   if (!apiKey) return null;
+  if (!title) return null;
   try {
     const res = await fetch(
       `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apiKey}`,
