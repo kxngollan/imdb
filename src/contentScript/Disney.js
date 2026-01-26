@@ -75,7 +75,9 @@ function ensureBadgeContainer() {
   border-radius: 0.25rem;
   font-size:12px;
     `;
-    host.appendChild(badge);
+    if (host) {
+      host.appendChild(badge);
+    }
   }
 
   return badge;
@@ -84,7 +86,7 @@ function ensureBadgeContainer() {
 function setBadgeText(text) {
   const badge = ensureBadgeContainer();
   if (!badge) return;
-  badge.textContent = text;
+  badge.textContent = apiKey ? text : "";
 }
 
 (async () => {

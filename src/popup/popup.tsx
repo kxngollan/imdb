@@ -63,7 +63,6 @@ const App: React.FC = () => {
 
       <main className="popup__card">
         <h2 className="popup__h2">Instructions</h2>
-
         <ol className="popup__steps">
           <li>
             Go to{" "}
@@ -84,7 +83,6 @@ const App: React.FC = () => {
           <li>Paste your API key below</li>
         </ol>
         <div className="error">{error ? <p>{error}</p> : ""}</div>
-
         <form className="popup__form" onSubmit={save}>
           <label className="popup__label" htmlFor="apiKey">
             API Key
@@ -131,6 +129,19 @@ const App: React.FC = () => {
           </div>
         </form>
       </main>
+
+      <a
+        className="bmc-button"
+        href="https://buymeacoffee.com/ollandagreat"
+        target="_blank"
+        rel="noopener"
+        style={{
+          width: `330px`,
+        }}
+      >
+        <img src="./coffee.png" alt="☕️" />
+        Buy me a coffee
+      </a>
     </div>
   );
 };

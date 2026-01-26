@@ -56,8 +56,9 @@ function ensureBadgeContainer() {
   const WHERE_TO_ADD_CLASS = "videoMetadata--line";
 
   let host = document.querySelector(`.${WHERE_TO_ADD_CLASS}`);
-  if (host) host.style.cssText = "margin-bottom: 5px";
-
+  if (host) {
+    host.style.cssText = "margin-bottom: 5px";
+  }
   let badge = document.getElementById(BADGE_ID);
   if (!badge) {
     badge = document.createElement("div");
@@ -80,7 +81,9 @@ function ensureBadgeContainer() {
   border-radius: 0.25rem;
   font-size:12px;
     `;
-    host.appendChild(badge);
+    if (host) {
+      host.appendChild(badge);
+    }
   }
 
   return badge;
@@ -89,7 +92,7 @@ function ensureBadgeContainer() {
 function setBadgeText(text) {
   const badge = ensureBadgeContainer();
   if (!badge) return;
-  badge.textContent = text;
+  badge.textContent = apiKey ? text : "";
 }
 
 (async () => {
